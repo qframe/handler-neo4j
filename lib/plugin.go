@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"reflect"
 	"github.com/zpatrick/go-config"
+	bolt "github.com/johnnadratowski/golang-neo4j-bolt-driver"
 
 	"github.com/qnib/qframe-types"
+	"github.com/qframe/types/inventory"
 )
+
 
 const (
 	version   = "0.0.0"
@@ -16,6 +19,7 @@ const (
 
 type Plugin struct {
 	qtypes.Plugin
+	conn bolt.Conn
 }
 
 func New(qChan qtypes.QChan, cfg *config.Config, name string) (Plugin, error) {
@@ -30,6 +34,12 @@ func New(qChan qtypes.QChan, cfg *config.Config, name string) (Plugin, error) {
 // Run fetches everything from the Data channel and flushes it to stdout
 func (p *Plugin) Run() {
 	p.Log("info", fmt.Sprintf("Start handler v%s", p.Version))
+	var err error
+	p.conn, err = p.Connect()
+	if err != nil {
+		return
+	}
+	defer p.conn.Close()
 	bg := p.QChan.Data.Join()
 	//inputs := p.GetInputs()
 	for {
@@ -41,4 +51,15 @@ func (p *Plugin) Run() {
 			}
 		}
 	}
+}
+
+func (p *Plugin) Connect() (bolt.Conn, error) {
+	host := p.CfgStringOr("host", "localhost")
+	port := p.CfgStringOr("port", "7687")
+	addr := fmt.Sprintf("bolt://%s:%s", host, port)
+	conn, err := bolt.NewDriver().OpenNeo(addr)
+	if err != nil {
+		p.Log("error", fmt.Sprintf("Not able to connect to '%s': %s", addr, err.Error()))
+	}
+	return conn, err
 }

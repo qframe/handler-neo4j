@@ -1,2 +1,3 @@
-{"src":"node1", "dst": "node2",  "is_bidirectional": "true", "tags":{}} 
-{"src":"node1", "dst": "node3",  "is_bidirectional": "true", "tags":{}} 
+{"time": "0", "subject":"node1", "object": "node2", "action": "connected", "tags": {}}
+{"time": "0", "subject":"node1", "object": "node3", "action": "connected", "tags": {}}
+

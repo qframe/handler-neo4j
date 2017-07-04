@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	version = "0.0.0"
+	version = "0.1.0"
 )
 
 type Base struct {
@@ -124,7 +124,6 @@ func (b *Base) StopProcessing(p qtypes.Plugin, allowEmptyInput bool) bool {
 	}
 	// TODO: Most likely invoked often, so check if performant enough
 	inputs := p.GetInputs()
-	//fmt.Printf("! %v && len(%v)=%d\n", allowEmptyInput, inputs, len(inputs))
 	if ! allowEmptyInput && len(inputs) == 0 {
 		format := "Plugin '%s' does not allow empty imputs, please set '%s.%s.inputs'"
 		msg := fmt.Sprintf(format, p.Name, p.Typ, p.Name)
@@ -132,11 +131,10 @@ func (b *Base) StopProcessing(p qtypes.Plugin, allowEmptyInput bool) bool {
 		return true
 	}
 	srcSuccess := p.CfgBoolOr("source-success", true)
-	/*
 	if ! b.InputsMatch(inputs) {
 		p.Log("debug", fmt.Sprintf("InputsMatch(%v) != %s", inputs, b.GetLastSource()))
 		return true
-	}*/
+	}
 	if b.SourceSuccess != srcSuccess {
 		msg := fmt.Sprintf("qm.SourceSuccess (%v) != (%v) srcSuccess", b.SourceSuccess, srcSuccess)
 		p.Log("debug", msg)

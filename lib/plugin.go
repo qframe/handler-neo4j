@@ -6,6 +6,7 @@ import (
 	"github.com/zpatrick/go-config"
 
 	"github.com/qnib/qframe-types"
+	"github.com/qframe/types/inventory"
 )
 
 const (
@@ -36,6 +37,18 @@ func (p *Plugin) Run() {
 		select {
 		case val := <-bg.Read:
 			switch val.(type) {
+			case qtypes.Message:
+				qm := val.(qtypes.Message)
+				if p.StopProcessingMessage(qm, false) {
+					continue
+				}
+			case qtypes_inventory.Base:
+				inv := val.(qtypes_inventory.Base)
+				if inv.StopProcessing(p.Plugin, false) {
+					continue
+				}
+				msg := fmt.Sprintf("Got inventory: Subject '%s' '%s' object '%s' (Tags:%v)", inv.Subject, inv.Action, inv.Object, inv.Tags)
+				p.Log("info", msg)
 			default:
 				p.Log("info" , fmt.Sprintf("Got %s: %v", reflect.TypeOf(val), val))
 			}

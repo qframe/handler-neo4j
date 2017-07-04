@@ -7,6 +7,7 @@ import (
 	"github.com/qframe/handler-neo4j/lib"
 	"github.com/qframe/collector-file/lib"
 	"sync"
+	"github.com/qframe/filter-inventory/lib"
 )
 
 
@@ -20,7 +21,9 @@ func main() {
 	qChan := qtypes.NewQChan()
 	qChan.Broadcast()
 	cfgMap := map[string]string{
-		"collector.file.path": "./resources/inventory.events",
+		"collector.file.path": "./resources/inventory.json",
+		"filter.inventory.inputs": "file",
+		"handler.neo4j.inputs": "inventory",
 	}
 
 	cfg := config.NewConfig([]config.Provider{config.NewStatic(cfgMap)})
@@ -32,6 +35,13 @@ func main() {
 		return
 	}
 	go n4j.Run()
+	// Filter to parse string to BaseInv
+	fi, err := filter_inventory.New(qChan, cfg, "inventory")
+	if err != nil {
+		log.Printf("[EE] Failed to create collector: %v", err)
+		return
+	}
+	go fi.Run()
 	// Dummy file
 	cf, err := collector_file.New(qChan, cfg, "file")
 	if err != nil {

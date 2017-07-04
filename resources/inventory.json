@@ -1,0 +1,3 @@
+{"time": 1499156100, "subject":"db1", "object": "db2", "action": "connected", "tags": {"replica":"true"}}
+{"time": 1499156110, "subject":"db1", "object": "www1", "action": "connected", "tags": {}}
+{"time": 1499156120, "subject":"db1", "object": "www2", "action": "connected", "tags": {}}

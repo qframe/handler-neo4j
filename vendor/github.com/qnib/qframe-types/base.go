@@ -18,7 +18,6 @@ type Base struct {
 	SourcePath		[]string
 	SourceSuccess 	bool
 	Data 			map[string]string // Additional Data
-
 }
 
 func NewBase(src string) Base {

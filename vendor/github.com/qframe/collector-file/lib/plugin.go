@@ -44,9 +44,9 @@ func (p *Plugin) Run() {
 	if err != nil {
 		log.Printf("[WW] File collector failed to open %s: %s", fPath, err)
 	}
+	b := qtypes.NewBase(p.Name)
 	for line := range t.Lines {
-		qm := qtypes.NewQMsg("collector", p.Name)
-		qm.Msg = line.Text
+		qm := qtypes.NewMessage(b, fPath, qtypes.MsgFile, line.Text)
 		p.QChan.Data.Send(qm)
 	}
 }

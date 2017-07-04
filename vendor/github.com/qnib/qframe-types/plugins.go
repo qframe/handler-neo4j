@@ -182,6 +182,9 @@ func (p *Plugin) StartTicker(name string, durMs int) Ticker {
 	return ticker
 }
 
+/*************** This mess needs to be abstracted...
+ Interface over all messages or such
+ */
 func (p *Plugin) StopProcessingMessage(qm Message, allowEmptyInput bool) bool {
 	p.MsgCount["received"]++
 	if p.MyID == qm.SourceID {

@@ -446,13 +446,19 @@
 			"revisionTime": "2017-07-04T08:49:28Z"
 		},
 		{
+			"checksumSHA1": "jmg4Jgaw0U/pW+EzF+dXTAkjvdM=",
+			"path": "github.com/qframe/handler-neo4j/lib",
+			"revision": "33500035f80588dda5e1b0f790f44e829e8f1385",
+			"revisionTime": "2017-07-04T12:40:14Z"
+		},
+		{
 			"checksumSHA1": "ZncKo6EkTDtWe626y0pidAV7lZE=",
 			"path": "github.com/qframe/types/inventory",
 			"revision": "8640032ac3c5d02bc46de0f59d8b8add5ca557db",
 			"revisionTime": "2017-07-04T12:34:15Z"
 		},
 		{
-			"checksumSHA1": "JW33dSUDTGull0Ub5BIVT+wufO4=",
+			"checksumSHA1": "mGsTAx+kTIbT35wE/zExZhlea2s=",
 			"path": "github.com/qframe/types/messages",
 			"revision": "8640032ac3c5d02bc46de0f59d8b8add5ca557db",
 			"revisionTime": "2017-07-04T12:34:15Z"

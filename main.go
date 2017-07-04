@@ -24,6 +24,7 @@ func main() {
 		"collector.file.path": "./resources/inventory.json",
 		"filter.inventory.inputs": "file",
 		"handler.neo4j.inputs": "inventory",
+		"log.level": "info",
 	}
 
 	cfg := config.NewConfig([]config.Provider{config.NewStatic(cfgMap)})

@@ -124,7 +124,7 @@ func (b *Base) StopProcessing(p qtypes.Plugin, allowEmptyInput bool) bool {
 	}
 	// TODO: Most likely invoked often, so check if performant enough
 	inputs := p.GetInputs()
-	fmt.Printf("! %v && len(%v)=%d\n", allowEmptyInput, inputs, len(inputs))
+	//fmt.Printf("! %v && len(%v)=%d\n", allowEmptyInput, inputs, len(inputs))
 	if ! allowEmptyInput && len(inputs) == 0 {
 		format := "Plugin '%s' does not allow empty imputs, please set '%s.%s.inputs'"
 		msg := fmt.Sprintf(format, p.Name, p.Typ, p.Name)

@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+
 type Neo4jConnector struct {
 	conn bolt.Conn
 }
@@ -31,11 +32,14 @@ func (nc *Neo4jConnector) Close() {
 	nc.conn.Close()
 }
 
-func (nc *Neo4jConnector) UpsertNode(name string) (err error) {
-	q := `MERGE (o:Node {name: {name}})
+func (nc *Neo4jConnector) UpsertNode(node interface{}) (err error) {
+	switch node.(type) {
+	case string:
+		q := `MERGE (o:Node {name: {name}})
   			ON CREATE SET o.created = timestamp(),o.seen = timestamp()
   			ON MATCH SET  o.seen = timestamp()`
-	_, err = nc.conn.ExecNeo(q, map[string]interface{}{"name": name})
+		_, err = nc.conn.ExecNeo(q, map[string]interface{}{"name": node})
+	}
 	return
 }
 

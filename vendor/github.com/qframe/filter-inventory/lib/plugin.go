@@ -36,7 +36,12 @@ func (p *Plugin) Run() {
 			switch val.(type) {
 			case qtypes.Message:
 				msg := val.(qtypes.Message)
+				p.StopProcessingMessage(msg, false)
 				p.handleMessage(msg)
+			case qtypes.ContainerEvent:
+				ce := val.(qtypes.ContainerEvent)
+				p.StopProcessingCntEvent(ce, false)
+				p.handleContainerEvent(ce)
 			default:
 				p.Log("trace", fmt.Sprintf("Received %s: %v", reflect.TypeOf(val), val))
 			}
@@ -59,4 +64,21 @@ func (p *Plugin) handleMessage(msg qtypes.Message) {
 
 		}
 	}
+}
+
+func (p *Plugin) handleContainerEvent(ce qtypes.ContainerEvent) {
+	switch ce.Event.Action {
+	case "resize":
+		return
+	default:
+		p.Log("debug", fmt.Sprintf("Received '%s.%s' for '%s'", ce.Event.Type, ce.Event.Action, ce.Container.Name))
+		b, err := qtypes_inventory.NewBaseFromContainerEvent(ce)
+		if err != nil {
+			p.Log("error", fmt.Sprintf("Error creating new base from ContainerEvent: %s", err.Error()))
+			return
+		}
+		b.EnrichContainer(ce)
+		p.QChan.SendData(b)
+	}
+
 }

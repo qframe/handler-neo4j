@@ -2,7 +2,7 @@ package handler_neo4j
 
 import (
 	"fmt"
-	"reflect"
+	//"reflect"
 	"github.com/zpatrick/go-config"
 
 	"github.com/qnib/qframe-types"
@@ -11,7 +11,7 @@ import (
 
 
 const (
-	version   = "0.0.0"
+	version   = "0.1.0"
 	pluginTyp = "handler"
 	pluginPkg = "neo4j"
 )
@@ -55,8 +55,8 @@ func (p *Plugin) Run() {
 					continue
 				}
 				p.HandleInventoryBase(inv)
-			default:
-				p.Log("info" , fmt.Sprintf("Got %s: %v", reflect.TypeOf(val), val))
+			//default:
+			//	p.Log("info" , fmt.Sprintf("Got %s: %v", reflect.TypeOf(val), val))
 			}
 		}
 	}
@@ -64,11 +64,10 @@ func (p *Plugin) Run() {
 
 
 func (p *Plugin) HandleInventoryBase(ib qtypes_inventory.Base) {
+	msg := fmt.Sprintf("Got inventory: Subject '%s' '%s' object '%s' (Tags:%v)", ib.Subject, ib.Action, ib.Object, ib.Tags)
+	p.Log("info", msg)
 	err := p.NeoConn.ConnectBase(ib)
 	if err != nil {
 		p.Log("error", err.Error())
 	}
-	msg := fmt.Sprintf("Got inventory: Subject '%s' '%s' object '%s' (Tags:%v)", ib.Subject, ib.Action, ib.Object, ib.Tags)
-	p.Log("info", msg)
-
 }

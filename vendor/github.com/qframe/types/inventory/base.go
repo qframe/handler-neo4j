@@ -4,6 +4,7 @@ import (
 	"time"
 	"encoding/json"
 	"github.com/qframe/types/messages"
+	"github.com/qnib/qframe-types"
 )
 
 const nanoX = 1000000000
@@ -18,9 +19,9 @@ type Base struct {
 	qtypes_messages.Base
 	Time 			time.Time
 	TimeUnixNano	int64				`json:"time"`
-	Subject			string 				`json:"subject"`	// Subject of what is going on (e.g. container)
-	Action			string				`json:"action"`
-	Object  		string        	 	`json:"object"` 	// Passive object
+	Subject			interface{} 		`json:"subject"`	// Subject of what is going on (e.g. container)
+	Action			interface{}			`json:"action"`
+	Object  		interface{}     	`json:"object"` 	// Passive object
 	Tags 			map[string]string 	`json:"tags"` 		// Tags that should be applied to the action
 }
 
@@ -31,4 +32,27 @@ func NewBaseFromJson(qb qtypes_messages.Base, str string) (b Base, err error) {
 	s,n := SplitUnixNano(b.TimeUnixNano)
 	b.Time = time.Unix(s, n)
 	return
+}
+
+
+func NewBaseFromContainerEvent(ce qtypes.ContainerEvent) (Base, error) {
+	var err error
+	b := Base{
+		Base: qtypes_messages.NewBaseFromOldBase("inventory", ce.Base),
+		Time: ce.Time,
+		TimeUnixNano: ce.Time.UnixNano(),
+	}
+	switch ce.Event.Type {
+	case "container":
+		b.EnrichContainer(ce)
+	}
+	return b, err
+}
+
+
+func (b *Base) EnrichContainer(ce qtypes.ContainerEvent) {
+	// TODO: Has to change to ID
+	b.Subject = ce.EngineInfo.Name
+	b.Action = ce.Event.Action
+	b.Object = ce.Container.Name
 }

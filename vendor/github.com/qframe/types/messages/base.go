@@ -118,8 +118,9 @@ func Sha1HashString(s string) string {
 
 
 func (b *Base) StopProcessing(p qtypes.Plugin, allowEmptyInput bool) bool {
-	if p.MyID == b.SourceID {
-		p.Log("debug", "Msg came from the same GID")
+	if b.SourceID != 0 && p.MyID == b.SourceID {
+		msg := fmt.Sprintf("Msg came from the same GID (My:%d == %d:SourceID)", p.MyID, b.SourceID)
+		p.Log("debug", msg)
 		return true
 	}
 	// TODO: Most likely invoked often, so check if performant enough
